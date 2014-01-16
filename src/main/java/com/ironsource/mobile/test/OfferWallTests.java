@@ -18,6 +18,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.topq.uiautomator.AutomatorService;
+import org.topq.uiautomator.Selector;
 
 import com.android.ddmlib.logcat.LogCatMessage;
 import com.ironsource.mobile.MobileSO;
@@ -30,16 +31,6 @@ public class OfferWallTests extends SystemTestCase4 {
 	private boolean clearAll = true;
 	
 	
-	public boolean isClearAll() {
-		return clearAll;
-	}
-
-
-	public void setClearAll(boolean clearAll) {
-		this.clearAll = clearAll;
-	}
-
-
 	@Before
 	public void init() throws Exception {
 		report.step("Opening CMTester");
@@ -49,6 +40,12 @@ public class OfferWallTests extends SystemTestCase4 {
 		Thread.sleep(1000);
 	}
 	
+	@Test
+	public void testMe() throws Exception{
+		mobile.getUiAutomatorClient().setOrientation("r");
+		mobile.getUiAutomatorClient().setOrientation("l");
+		mobile.getUiAutomatorClient().setOrientation("n");
+	}
 	
 	@Test
 	@TestProperties(name = "2 OfferWall - Portrate Mode" ,paramsInclude = { "clearAll" })
@@ -79,10 +76,12 @@ public class OfferWallTests extends SystemTestCase4 {
 		
 		report.step("Click on'Show (not force) button'");
 		report.report("click on button'");
-		mobileClient.clickOnButton(0);
+		mobileClient.clickOnButtonWithText("Show stickee");
 		Thread.sleep(1000);
 		report.report("take screenshot");
 		ReporterHelper.copyFileToReporterAndAddLink(report, mobile.capturescreen(), "screenshot");
+		//Selector[] selectors = new Selector().setIndex(0).getChildOrSiblingSelector();
+		int count = mobile.getUiAutomatorClient().count(new Selector().setIndex(0));
 		
 		mobileClient.clickOnHardwareButton(HardwareButtons.BACK);
 		ReporterHelper.copyFileToReporterAndAddLink(report, mobile.capturescreen(), "screenshot");
@@ -96,12 +95,6 @@ public class OfferWallTests extends SystemTestCase4 {
 		
 		verifyResult(jsonReports, RSCode.IMPRESSION);
 		verifyResult(jsonReports, RSCode.BACK);
-		
-		mobile.clickOnStickee();
-		Thread.sleep(2000);
-		
-		
-		
 		
 	}
 	
@@ -168,5 +161,15 @@ public class OfferWallTests extends SystemTestCase4 {
 		mobileClient.closeConnection();
 		mobile.close();
 	}
+	
+	public boolean isClearAll() {
+		return clearAll;
+	}
+
+
+	public void setClearAll(boolean clearAll) {
+		this.clearAll = clearAll;
+	}
+
 
 }
