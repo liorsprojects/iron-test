@@ -1,2 +1,7 @@
 target/
 log/
+jsystem*
+runner*
+.testdir.tmp
+/lib
+.settings/**
