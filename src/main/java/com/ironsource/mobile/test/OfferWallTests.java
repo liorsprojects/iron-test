@@ -17,6 +17,7 @@ import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.topq.uiautomator.AutomatorService;
 
 import com.android.ddmlib.logcat.LogCatMessage;
 import com.ironsource.mobile.MobileSO;
@@ -26,7 +27,6 @@ public class OfferWallTests extends SystemTestCase4 {
 	
 	private MobileSO mobile;
 	private MobileClient mobileClient;
-	
 	private boolean clearAll = true;
 	
 	
@@ -44,7 +44,7 @@ public class OfferWallTests extends SystemTestCase4 {
 	public void init() throws Exception {
 		report.step("Opening CMTester");
 		mobile = (MobileSO) system.getSystemObject("mobile");
-		mobileClient = (MobileClient) mobile.getMobileClient();
+		mobileClient = (MobileClient) mobile.getRobotiumClien();
 		mobile.clearLogcat();
 		Thread.sleep(1000);
 	}
@@ -96,6 +96,11 @@ public class OfferWallTests extends SystemTestCase4 {
 		
 		verifyResult(jsonReports, RSCode.IMPRESSION);
 		verifyResult(jsonReports, RSCode.BACK);
+		
+		mobile.clickOnStickee();
+		Thread.sleep(2000);
+		
+		
 		
 		
 	}
