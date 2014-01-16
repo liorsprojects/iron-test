@@ -8,6 +8,7 @@ import java.util.List;
 
 import jsystem.framework.TestProperties;
 import jsystem.framework.report.Reporter;
+import jsystem.framework.report.ReporterHelper;
 import junit.framework.SystemTestCase4;
 
 import org.json.simple.JSONObject;
@@ -58,7 +59,7 @@ public class OfferWallTests extends SystemTestCase4 {
 		mobileClient.clickOnButton(0);
 		Thread.sleep(1000);
 		report.report("take screenshot");
-		report.addLink("screenshot", mobile.capturescreen());
+		ReporterHelper.copyFileToReporterAndAddLink(report, mobile.capturescreen(), "screenshot");
 		
 		report.step("Analayzing logcat reports");
 		report.report("get logcat messages");
@@ -81,8 +82,11 @@ public class OfferWallTests extends SystemTestCase4 {
 		mobileClient.clickOnButton(0);
 		Thread.sleep(1000);
 		report.report("take screenshot");
-		report.addLink("screenshot", mobile.capturescreen());
+		ReporterHelper.copyFileToReporterAndAddLink(report, mobile.capturescreen(), "screenshot");
 		
+		mobileClient.clickOnHardwareButton(HardwareButtons.BACK);
+		ReporterHelper.copyFileToReporterAndAddLink(report, mobile.capturescreen(), "screenshot");
+
 		report.step("Analayzing logcat reports");
 		report.report("get logcat messages");
 		List<LogCatMessage> messages = mobile.getFilterdMessages();
@@ -90,17 +94,14 @@ public class OfferWallTests extends SystemTestCase4 {
 		report.report("parse logcat message to json objects");
 		List<JSONObject> jsonReports = parseJsonReports(messages);
 		
-		report.report("verifying result...");
 		verifyResult(jsonReports, RSCode.IMPRESSION);
-		mobileClient.clickOnHardwareButton(HardwareButtons.BACK);
-		
-		Thread.sleep(1000);
+		verifyResult(jsonReports, RSCode.BACK);
 		
 		
 	}
 	
 	private void verifyResult(List<JSONObject> reports, RSCode expectedCode) throws Exception {
-		
+		report.report("verifying result, expected: " + expectedCode.getRsCode());
 		boolean isDExist = false;
 		
 		for (JSONObject jsonObject : reports) {
@@ -112,7 +113,7 @@ public class OfferWallTests extends SystemTestCase4 {
 					break;
 				} else if(RSCode.convert(rs) == RSCode.ERROR) {
 					report.report("ERROR: \"RS\"=\"E\" reported", Reporter.FAIL);
-					report.addLink("error capture", mobile.capturescreen());
+					ReporterHelper.copyFileToReporterAndAddLink(report, mobile.capturescreen(), "screenshot");
 				}
 			}
 		}
