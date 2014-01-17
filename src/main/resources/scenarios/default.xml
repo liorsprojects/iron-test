@@ -14,31 +14,13 @@
     <taskdef classname="com.aqua.anttask.jsystem.JSystemSetAntProperties" name="jsystemsetantproperties"/>
     <target name="execute scenario">
         <antcallback target="t0"/>
-        <antcallback target="t1"/>
-        <antcallback target="t2"/>
     </target>
     <target name="t0">
         <jsystem showoutput="true">
-            <sysproperty key="jsystem.uuid" value="d3ebacbc-64c2-4c98-91d9-bb35bc3c86a1"/>
+            <sysproperty key="jsystem.uuid" value="2f6e2481-194c-4c07-9b85-7d2cfccfd1e3"/>
             <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
             <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
             <test name="com.ironsource.mobile.test.OfferWallTests.offerWall2Portrate"/>
-        </jsystem>
-    </target>
-    <target name="t1">
-        <jsystem showoutput="true">
-            <sysproperty key="jsystem.uuid" value="eba8481b-3196-4af5-85f3-913b9fda8f71"/>
-            <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
-            <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
-            <test name="com.ironsource.mobile.test.OfferWallTests.offerWall2PortrateCloseWebview"/>
-        </jsystem>
-    </target>
-    <target name="t2">
-        <jsystem showoutput="true">
-            <sysproperty key="jsystem.uuid" value="a3db4ec8-aeec-4324-8206-3890c878404e"/>
-            <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
-            <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
-            <test name="com.ironsource.mobile.test.OfferWallTests.testMe"/>
         </jsystem>
     </target>
 </project>
