@@ -3,12 +3,14 @@ package com.ironsource.mobile.test;
 import il.co.topq.mobile.client.impl.MobileClient;
 import il.co.topq.mobile.common.client.enums.HardwareButtons;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import jsystem.framework.TestProperties;
 import jsystem.framework.report.Reporter;
 import jsystem.framework.report.ReporterHelper;
+import jsystem.treeui.reporter.ReportersPanel;
 import junit.framework.SystemTestCase4;
 
 import org.json.simple.JSONObject;
@@ -24,6 +26,7 @@ import com.android.ddmlib.logcat.LogCatMessage;
 import com.ironsource.mobile.ADBConnection;
 import com.ironsource.mobile.MobileSO;
 import com.ironsource.mobile.RSCode;
+import com.ironsource.mobile.reporers.ImageFlowHtmlReport;
 
 public class OfferWallTests extends SystemTestCase4 {
 
@@ -50,8 +53,8 @@ public class OfferWallTests extends SystemTestCase4 {
 	@TestProperties(name = "2 OfferWall - Portrate Mode", paramsInclude = { "clearAll" })
 	public void offerWall2Portrate() throws Exception {
 
-		report.step("Click on 'Show (not force) button'");
-		robotiumClient.clickOnButtonWithText("Show (not force)");
+		report.step("Click on 'Show stickee' button");
+		robotiumClient.clickOnButtonWithText("Show stickee");
 		Thread.sleep(1000);
 		report.report("take screenshot");
 		ReporterHelper.copyFileToReporterAndAddLink(report,
@@ -64,6 +67,44 @@ public class OfferWallTests extends SystemTestCase4 {
 		report.report("parse logcat message to json objects");
 		List<JSONObject> jsonReports = parseJsonReports(messages);
 
+		report.step("verifying result...");
+		verifyResult(jsonReports, RSCode.IMPRESSION);
+
+	}
+	
+	@Test
+	@TestProperties(name = "2 OfferWall - Portrate Mode uiautomator", paramsInclude = { "clearAll" })
+	public void offerWall2PortrateUiautomator() throws Exception {
+
+		ImageFlowHtmlReport imageFlowHtmlReport = new ImageFlowHtmlReport();
+		imageFlowHtmlReport.addScaleButtonWidget();
+		report.step("Click on 'Show stickee' button");
+		Thread.sleep(1000);
+		uiautomatorClient.click(new Selector().setText("Show (not force)"));
+		
+		File f1 = adb.getScreenshotWithAdb(null);
+
+		imageFlowHtmlReport.addTitledImage("clicked on 'Show (not force)'", f1);
+		
+		File f2 = mobile.capturescreenWithRobotium();
+		
+		imageFlowHtmlReport.addTitledImage("clicked on 'Show (not force)' again", f2);
+		
+		report.report("screen flow", imageFlowHtmlReport.getHtmlReport(),Reporter.PASS,false,true,false,false);
+		
+		report.stopLevel();
+		
+		report.stopLevel();
+		report.step("Analayzing logcat reports");
+		report.report("get logcat messages");
+		List<LogCatMessage> messages = mobile.getFilterdMessages();
+
+		report.report("parse logcat message to json objects");
+		List<JSONObject> jsonReports = parseJsonReports(messages);
+
+		report.step("verifying result...");
+		verifyResult(jsonReports, RSCode.INAPP);
+		
 		report.step("verifying result...");
 		verifyResult(jsonReports, RSCode.IMPRESSION);
 
