@@ -2,7 +2,6 @@ package com.ironsource.mobile.test;
 
 import il.co.topq.mobile.client.impl.MobileClient;
 import il.co.topq.mobile.client.impl.WebElement;
-import il.co.topq.mobile.common.client.enums.HardwareButtons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +11,12 @@ import jsystem.framework.report.Reporter;
 import jsystem.framework.report.ReporterHelper;
 import junit.framework.SystemTestCase4;
 
-import org.apache.log4j.spi.RepositorySelector;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.python.modules.thread;
 import org.topq.uiautomator.AutomatorService;
 import org.topq.uiautomator.Selector;
 
@@ -51,33 +48,31 @@ public class OfferWallTests extends SystemTestCase4 {
 		uiautomatorClient = mobile.getUiAutomatorClient();
 		adb = mobile.getAdbConnection();
 		adb.clearLogcat();
+		
 		report.report("launch MCTester app");
 		//robotiumClient.launch(MCTESTER_ACTIVITY);
 		Thread.sleep(2000);
-		
+	
 		uiautomatorClient.pressKey("home");
-		
-		uiautomatorClient.click(new Selector().setDescription("Apps").setClassName("android.widget.TextView"));
-		
+		uiautomatorClient.click(new Selector().setDescription("Apps").setClassName("android.widget.TextView"));	
 		uiautomatorClient.click(new Selector().setText("MCTester").setClassName("android.widget.TextView"));
 		
 		if(!clearAll) {
 			return;
 		}
 		uiautomatorClient.click(new Selector().setText("Clear all"));
-		
 		uiautomatorClient.pressKey("home");
-		
 		uiautomatorClient.click(new Selector().setDescription("Apps").setClassName("android.widget.TextView"));
-		
 		uiautomatorClient.click(new Selector().setText("MCTester").setClassName("android.widget.TextView"));
 		
 	}
+
 
 	@Test
 	@TestProperties(name = "2 OfferWall - uiautomator only", paramsInclude = { "x, y, clearAll" })
 	public void offerWall2Portrate() throws Exception {
 
+		
 		ImageFlowHtmlReport imageFlowHtmlReport = new ImageFlowHtmlReport();
 		imageFlowHtmlReport.addScaleButtonWidget();
 		imageFlowHtmlReport.addTitledImage("Before App Launch", adb.getScreenshotWithAdb(null));
@@ -85,7 +80,9 @@ public class OfferWallTests extends SystemTestCase4 {
 		report.step("waiting for MCTester to load");
 		boolean inApp = uiautomatorClient.waitForExists(new Selector().setText("Show stickee"), 5000);
 		if(inApp) {
-			report.step("In App");
+			report.report("Application started");
+//			report.step("In App waiting for RS Code \"W\"...");
+//			waitForRSCode(RSCode.INAPP, 60000);
 		} else {
 			report.report("screen flow",imageFlowHtmlReport.getHtmlReport(),Reporter.PASS, false, true, false,false);
 			throw new Exception("The app did not launch");
@@ -96,15 +93,19 @@ public class OfferWallTests extends SystemTestCase4 {
 		Thread.sleep(2000);
 		imageFlowHtmlReport.addTitledImage("After show (not force)", adb.getScreenshotWithAdb(null));
 	
+		waitForRSCode(RSCode.INAPP, 5000);
+		waitForRSCode(RSCode.IMPRESSION, 5000);
+		
 		report.step("Click on one of the apps");
 		uiautomatorClient.click(368,500);
-		Thread.sleep(2000);
+		waitForRSCode(RSCode.CLICK, 10000);
 		imageFlowHtmlReport.addTitledImage("After click On app", adb.getScreenshotWithAdb(null));
 		
 		report.step("waiting for playstore");
 		boolean inPlayStore = uiautomatorClient.waitForExists(new Selector().setText("INSTALL"), 5000);
 		if(inPlayStore) {
 			report.step("In Playstore");
+			
 		} else {
 			report.report("screen flow",imageFlowHtmlReport.getHtmlReport(),Reporter.PASS, false, true, false,false);
 			throw new Exception("Did not navigated to Playstore (check internet connection");
@@ -145,29 +146,59 @@ public class OfferWallTests extends SystemTestCase4 {
 		Thread.sleep(2000);
 		imageFlowHtmlReport.addTitledImage("App Installed", adb.getScreenshotWithAdb(null));
 		
+		waitForRSCode(RSCode.INSATLL, 600000);
 		
 		report.report("screen flow",imageFlowHtmlReport.getHtmlReport(),Reporter.PASS, false, true, false,false);
 		
 		
-		report.report("get logcat messages");
-		List<LogCatMessage> messages = mobile.getFilterdMessages();
-
-		report.report("parse logcat message to json objects");
-		List<JSONObject> jsonReports = parseJsonReports(messages);
-
-		report.step("verifying result...");
-		verifyResult(jsonReports, RSCode.INAPP);
-
-		report.step("verifying result...");
-		verifyResult(jsonReports, RSCode.IMPRESSION);
-		
-		report.step("verifying result...");
-		verifyResult(jsonReports, RSCode.CLICK);
-		
-		report.step("verifying result...");
-		verifyResult(jsonReports, RSCode.INSATLL);
+//		report.report("get logcat messages");
+//		List<LogCatMessage> messages = mobile.getFilterdMessages();
+//
+//		report.report("parse logcat message to json objects");
+//		List<JSONObject> jsonReports = parseJsonReports(messages);
+//
+//		report.step("verifying result...");
+//		verifyResult(jsonReports, RSCode.INAPP);
+//
+//		report.step("verifying result...");
+//		verifyResult(jsonReports, RSCode.IMPRESSION);
+//		
+//		report.step("verifying result...");
+//		verifyResult(jsonReports, RSCode.CLICK);
+//		
+//		report.step("verifying result...");
+//		verifyResult(jsonReports, RSCode.INSATLL);
 
 	}
+
+	private void waitForRSCode(RSCode rsCode, int timeout) throws Exception {
+		long now = System.currentTimeMillis();
+		boolean exist = false;
+		List<LogCatMessage> messages;
+		while(!exist) {
+			if (System.currentTimeMillis() - now > timeout) {
+				throw new Exception("Did not find expected RS code: " + rsCode.getRsCode() + " after: " + timeout + " millis");
+			}
+	
+			messages = adb.getMobileCoreLogcatMessages();
+			for (LogCatMessage logCatMessage : messages) {
+				if(logCatMessage.getMessage().contains("\"RS\":\"" + rsCode.getRsCode() + "\"")) {
+					report.report("Found RS Code: " + rsCode.getRsCode());
+					exist = true;
+				} 
+				if(logCatMessage.getMessage().contains("\"RS\":\"E\"")) {
+					throw new Exception("Error: Found RS Code: E while waiting for " + rsCode.getRsCode());
+				} 
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				//ignore
+			}
+		}
+		
+	}
+
 
 	@Test
 	@TestProperties(name = "2 OfferWall - Portrate Mode uiautomator", paramsInclude = { "clearAll" })
