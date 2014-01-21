@@ -1,4 +1,3 @@
-//package com.ironsource.mobile.test;
 //
 //import il.co.topq.mobile.client.impl.MobileClient;
 //import il.co.topq.mobile.common.datamodel.CommandResponse;

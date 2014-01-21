@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><sut validators="">
+    <mobile>
+        <class>com.ironsource.mobile.MobileSO</class>
+        <serverHost>172.17.24.50</serverHost>
+        <serverPort>4321</serverPort>
+    </mobile>
+</sut>
