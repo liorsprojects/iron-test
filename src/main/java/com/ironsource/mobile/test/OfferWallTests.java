@@ -81,8 +81,6 @@ public class OfferWallTests extends SystemTestCase4 {
 		boolean inApp = uiautomatorClient.waitForExists(new Selector().setText("Show stickee"), 5000);
 		if(inApp) {
 			report.report("Application started");
-//			report.step("In App waiting for RS Code \"W\"...");
-//			waitForRSCode(RSCode.INAPP, 60000);
 		} else {
 			report.report("screen flow",imageFlowHtmlReport.getHtmlReport(),Reporter.PASS, false, true, false,false);
 			throw new Exception("The app did not launch");
@@ -149,25 +147,6 @@ public class OfferWallTests extends SystemTestCase4 {
 		waitForRSCode(RSCode.INSATLL, 600000);
 		
 		report.report("screen flow",imageFlowHtmlReport.getHtmlReport(),Reporter.PASS, false, true, false,false);
-		
-		
-//		report.report("get logcat messages");
-//		List<LogCatMessage> messages = mobile.getFilterdMessages();
-//
-//		report.report("parse logcat message to json objects");
-//		List<JSONObject> jsonReports = parseJsonReports(messages);
-//
-//		report.step("verifying result...");
-//		verifyResult(jsonReports, RSCode.INAPP);
-//
-//		report.step("verifying result...");
-//		verifyResult(jsonReports, RSCode.IMPRESSION);
-//		
-//		report.step("verifying result...");
-//		verifyResult(jsonReports, RSCode.CLICK);
-//		
-//		report.step("verifying result...");
-//		verifyResult(jsonReports, RSCode.INSATLL);
 
 	}
 
