@@ -11,16 +11,10 @@ public class ImageFlowHtmlReport {
 	private static final String SIMPLE_TITLE_FORMAT = "<p>%s</p>";
 	private static final String SIMPLE_IMG_FORMAT = "<img src=\"%s\"/>";
 	private static final String BLANK_ROW = "<br/>";
-	private static final String STYLE = "<style>a,p,h1,h2,h3,div,img " +
-											"{" +
-												"display: block" +
-											"}"	+
-												"p{color:red}" +
-											"img{width:30%}" +
-											"#scaleWidget {position:absolute;right:10px;top:10px;}" + 
-											"#scaleWidget button{float:left;}" +
-										"</style>";
 	private String jqueryLocation;
+	private String widgetLocation;
+	private String cssLocation;
+	
 	
 	StringBuilder htmlBody;
 	
@@ -29,7 +23,15 @@ public class ImageFlowHtmlReport {
 		Path resourcePath = Paths.get(resourceUrl.toURI());
 		File f = resourcePath.toFile();
 		jqueryLocation = f.getAbsolutePath();
-	
+		
+		resourceUrl = getClass().getResource("/widgets.js");
+		resourcePath = Paths.get(resourceUrl.toURI());
+		widgetLocation = resourcePath.toFile().getAbsolutePath();
+		
+		resourceUrl = getClass().getResource("/widgets.css");
+		resourcePath = Paths.get(resourceUrl.toURI());
+		cssLocation = resourcePath.toFile().getAbsolutePath();
+		
 		htmlBody = new StringBuilder("<h3>Test Screenshot flow</h3>");
 	}
 	
@@ -41,14 +43,15 @@ public class ImageFlowHtmlReport {
 	}
 	
 	public String getHtmlReport() {
-		return "<html><head>" + STYLE + "<script src='"+ jqueryLocation +"'></script>" +"</head><body>" + htmlBody.toString() +"</body></html>";
+		return "<html><head>" + "<link type=\"text/css\" href=\""+ cssLocation +"\" rel=\"stylesheet\">" +
+				"<script src='" + jqueryLocation +"'></script>" +
+				"<script src='" + widgetLocation +"'></script>" +
+				"</head><body>" + htmlBody.toString() +"</body></html>";
 	}
 	
 	public void addScaleButtonWidget() {
-		String widgetScript = "<script>$(document).ready(function(){$('#plus').click(function(){ "+
-				"console.log('clicked +');$('img').each(function(){$(this).width($(this).width() + 10)});});$('#minus').click(function(){"+
-				"console.log('clicked -');$('img').each(function(){$(this).width($(this).width() - 10)});})});</script>";
+		
 		String scaleButtonWidget = "<div id=\"scaleWidget\"><button id='plus' type='button'>+</button><button id='minus' type='butto'>-</button></div>";
-		htmlBody.append(widgetScript + scaleButtonWidget);
+		htmlBody.append(scaleButtonWidget);
 	}
 }
