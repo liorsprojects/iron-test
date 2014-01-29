@@ -15,21 +15,48 @@
     <target name="execute scenario">
         <antcallback target="t0"/>
         <antcallback target="t1"/>
+        <antcallback target="t2"/>
+        <antcallback target="t3"/>
+        <antcallback target="t4"/>
     </target>
     <target name="t0">
         <jsystem showoutput="true">
-            <sysproperty key="jsystem.uuid" value="2f6e2481-194c-4c07-9b85-7d2cfccfd1e3"/>
+            <sysproperty key="jsystem.uuid" value="6d094a75-153f-403d-825e-c677a12e70d3"/>
             <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
             <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
-            <test name="com.ironsource.mobile.test.OfferWallTests.offerWall2Portrate"/>
+            <test name="com.ironsource.mobile.test.FiddlerOperations.startFiddler"/>
         </jsystem>
     </target>
     <target name="t1">
         <jsystem showoutput="true">
-            <sysproperty key="jsystem.uuid" value="3e639ba2-808f-416a-9695-e6490f5cac0d"/>
+            <sysproperty key="jsystem.uuid" value="61488910-e3ee-4707-acb4-fa29d6a9997a"/>
             <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
             <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
-            <test name="com.ironsource.mobile.test.OfferWallTests.offerWall2PortrateUiautomator"/>
+            <test name="com.ironsource.mobile.test.MCTesterTests.setupTestsTemplate"/>
+        </jsystem>
+    </target>
+    <target name="t2">
+        <jsystem showoutput="true">
+            <sysproperty key="jsystem.uuid" value="77fa5831-8f46-46ed-bd66-b243744819e1"/>
+            <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
+            <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
+            <test name="com.ironsource.mobile.test.MCTesterTests.closeApplicationUsingBackButton"/>
+        </jsystem>
+    </target>
+    <target name="t3">
+        <jsystem showoutput="true">
+            <sysproperty key="jsystem.uuid" value="a50e256b-2c03-4234-b101-dc4eef5b203d"/>
+            <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
+            <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
+            <test name="com.ironsource.mobile.test.MCTesterTests.fullClickToDownloadFlow"/>
+        </jsystem>
+    </target>
+    <target name="t4">
+        <jsystem showoutput="true">
+            <sysproperty key="jsystem.uuid" value="091175fa-9a4d-4f19-a1cd-121eb747e8cc"/>
+            <sysproperty key="jsystem.parent.uuid" value="${jsystem.parent.uuid}.${jsystem.uuid}"/>
+            <sysproperty key="jsystem.parent.name" value="${jsystem.parent.name}.${ant.project.name}"/>
+            <test name="com.ironsource.mobile.test.FiddlerOperations.stopFiddler"/>
         </jsystem>
     </target>
 </project>

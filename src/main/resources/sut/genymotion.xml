@@ -4,4 +4,7 @@
         <serverHost>192.168.56.101</serverHost>
         <serverPort>4321</serverPort>
     </mobile>
+    <fiddler>
+        <class>com.ironsource.mobile.FiddlerCli</class>
+    </fiddler>
 </sut>
