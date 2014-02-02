@@ -82,7 +82,6 @@ public class MCTesterTests extends SystemTestCase4 {
 		report.report("retrieving adb connection");
 		adb = mobile.getAdbConnection();
 	
-		
 		offerwallElements = new ArrayList<WebElement>();
 		
 		captureWebview();		
@@ -132,7 +131,7 @@ public class MCTesterTests extends SystemTestCase4 {
 		mobile.waitForRSCode(RSCode.CLOSE, FlowCode.OFFERWALL, logcatReportTimeout);
 		flowHtmlReport.addTitledImage("After click on {X}", adb.getScreenshotWithAdb(null));
 		report.report("screen flow", flowHtmlReport.getHtmlReport(), Reporter.PASS, false, true, false, false);
-		mobile.clearRecentApps();
+	
 	}
 	
 	
@@ -228,7 +227,6 @@ public class MCTesterTests extends SystemTestCase4 {
 		flowHtmlReport.addTitledImage("App Installed", adb.getScreenshotWithAdb(null));
 		mobile.waitForRSCode(RSCode.INSATLL, FlowCode.OFFERWALL, 600000);
 		report.report("screen flow", flowHtmlReport.getHtmlReport(), Reporter.PASS, false, true, false, false);
-		mobile.clearRecentApps();
 	}
 	
 	/**
@@ -273,7 +271,7 @@ public class MCTesterTests extends SystemTestCase4 {
 		flowHtmlReport.addTitledImage("After \"Back\" button pressed", adb.getScreenshotWithAdb(null));
 		mobile.waitForRSCode(RSCode.BACK, FlowCode.OFFERWALL, logcatReportTimeout);
 		report.report("screen flow", flowHtmlReport.getHtmlReport(), Reporter.PASS, false, true, false, false);
-		mobile.clearRecentApps();
+	
 	}
 	
 	//TODO - when we have all template we will know what to expect.
@@ -310,25 +308,21 @@ public class MCTesterTests extends SystemTestCase4 {
 				currentApp = element.getText();
 				break;
 			}
-			
 			report.report("about to click on element with class '" + element.getClassName() + "' of app '"+ currentApp +"'");
 			uiautomatorClient.click(element.getX(), element.getY());
 			
 			if(uiautomatorClient.waitForExists(downloadSelector, 10000) ||
 					uiautomatorClient.waitForExists(openSelector, 10000) ||
 						uiautomatorClient.waitForExists(notCountrySelector, 10000)||
-							uiautomatorClient.waitForExists(notSupporSelector, 10000)) {
-				
+							uiautomatorClient.waitForExists(notSupporSelector, 10000)) {		
 				report.report("succeeded to navigate to playstore by pressing element with class: " + element.getClassName());
 				flowHtmlReport.addTitledImage("After click on element with class: " +element.getClassName()+ " in offrewall", adb.getScreenshotWithAdb(null));
 				uiautomatorClient.pressKey("back");
 				
 			}else {
 				throw new Exception("did not succeed navigation to playstore by pressing element with class: " + element.getClassName());
-			}
-			
+			}	
 		}
-		
 	}
 	
 	private List<WebElement> getClickToMarketElements() throws Exception {
@@ -355,8 +349,9 @@ public class MCTesterTests extends SystemTestCase4 {
 		if (!isPass()){
 			flowHtmlReport.addTitledImage("Failed Here", adb.getScreenshotWithAdb(null));
 			report.report("screen flow", flowHtmlReport.getHtmlReport(), Reporter.PASS, false, true, false, false);
-			adb.clearLogcat();
 		}
+		adb.clearLogcat();
+		mobile.clearRecentApps();
 	}
 	//all methods that are candidates to move to an upper abstraction level. 
 	private void captureWebview () throws Exception {
@@ -386,8 +381,6 @@ public class MCTesterTests extends SystemTestCase4 {
 		robotiumClient.finishOpenedActivities();
 		robotiumClient.closeConnection();
 		adb.stopActivity(MCTESTER_ACTIVITY);
-		
-		mobile.clearRecentApps();
 	}
 	
 	/**
@@ -398,6 +391,7 @@ public class MCTesterTests extends SystemTestCase4 {
 	 * 
 	 * @throws Exception
 	 */
+	@Deprecated //this method visually scroll the application pages and click on the app (unnecessary)
 	private void launchMCtester() throws Exception {
 		uiautomatorClient.pressKey("home");
 		flowHtmlReport.addTitledImage("Before MCTester Launch", adb.getScreenshotWithAdb(null));
@@ -425,8 +419,7 @@ public class MCTesterTests extends SystemTestCase4 {
 	}
 	
 	
-	
-	
+
 	//The setters and getters are the way to expose parameters to test
 	
 	public int getLogcatReportTimeout() {
