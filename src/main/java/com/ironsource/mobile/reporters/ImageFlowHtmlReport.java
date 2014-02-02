@@ -17,14 +17,9 @@ public class ImageFlowHtmlReport {
 	private String cssLocation;
 	private String cssUiLocation;
 	private String widgetIconLocation;
-
-	
-	
 	
 	StringBuilder htmlBody;
-	
 
-	
 	public ImageFlowHtmlReport() throws URISyntaxException {
 		URL resourceUrl = getClass().getResource("/jquery-2.0.3.min.js");
 		Path resourcePath = Paths.get(resourceUrl.toURI());
